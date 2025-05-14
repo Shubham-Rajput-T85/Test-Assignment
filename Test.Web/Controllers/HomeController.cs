@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Test.Entity.Data;
+using Test.Web.Attributes;
 using Test.Web.Models;
 
 namespace Test.Web.Controllers;
@@ -24,10 +25,19 @@ public class HomeController : Controller
         return View();
     }
 
+[CustomAuthorize("Admin","User")]
     public IActionResult MainPage(User user)
     {
         return View(user);
     }
+
+
+[CustomAuthorize("Admin")]
+    public IActionResult AdminPage()
+    {
+        return View();
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -92,4 +92,12 @@ public class AccountController : Controller
             return RedirectToAction("MainPage", "Home",user);
         }
 
+
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
+
+
 }

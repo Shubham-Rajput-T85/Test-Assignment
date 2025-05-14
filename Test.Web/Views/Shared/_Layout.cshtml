@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,13 +9,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Test.Web.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Test.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -23,9 +25,14 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                                asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                </div>
+                <div>
+                    <button class="btn-custom" id="logout-button" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">Logout</button>
                 </div>
             </div>
         </nav>
@@ -35,6 +42,46 @@
             @RenderBody()
         </main>
     </div>
+
+
+
+
+    @* <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button> *@
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Are you sure you want to logout?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <a type="button" class="btn btn-primary" asp-controller="Account"
+                        asp-action="Logout">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <footer class="border-top footer text-muted">
         <div class="container">
@@ -46,4 +93,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
