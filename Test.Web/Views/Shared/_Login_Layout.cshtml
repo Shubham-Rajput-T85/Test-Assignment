@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Test.Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Test.Web.styles.css" asp-append-version="true" />
+</head>
+
+<style>
+    .form-background{
+        background: #2a379b;
+        background: linear-gradient(90deg,rgba(42, 55, 155, 1), rgba(193, 83, 237, 1));
+    }
+    .form-content{
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 200px;
+        width: 800px;
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+</style>
+
+<body class="form-background">
+    <div class="container form-content">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
