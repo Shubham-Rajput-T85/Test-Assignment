@@ -34,7 +34,7 @@ public class AccountController : Controller
                 return View();
             else
             {
-                return RedirectToAction( "MainPage","Home",user);
+                return RedirectToAction( "Index","Concert");
             }
         // return View();
     }
@@ -60,7 +60,7 @@ public class AccountController : Controller
                 // ViewBag.ErrorMessage = "Invalid email or password.";
                 // return View();
                 
-                return RedirectToAction("Error", "Home");
+                return View(model);
             }
 
             // Generate JWT Token
@@ -89,7 +89,8 @@ public class AccountController : Controller
 
             // return Json("success");
 
-            return RedirectToAction("MainPage", "Home",user);
+            // return RedirectToAction("MainPage", "Home",user);
+            return RedirectToAction("Index", "Concert");
         }
 
 

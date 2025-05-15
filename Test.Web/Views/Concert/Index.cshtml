@@ -1,0 +1,152 @@
+
+<div class="container-fluid main-body">
+    <div class="d-flex mt-1 justify-content-between align-items-center">
+        <div>
+            <h1 class="text-primary">Concert Booking</h1>
+        </div>
+        <div class="d-flex justify-content-end ">     
+            <div>  
+                <div class="col search-container h-100">
+                    <input type="text" id="search" placeholder="Search..." class="concert-form-field h-100">
+                </div>
+            </div>
+            <div class="ms-3">
+            <a asp-controller="Concert" asp-action="Add" class="btn btn-primary text-white btn-custom ">+ <span class="d-none d-sm-inline">Add Concert </span></a>   
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive p-2 m-2 bg-container scrollable-div" id="concertTableContainer">
+            @* @await Html.PartialAsync("_ConcertPartialView", Model) *@
+            @* partial here *@
+    </div>
+</div>
+
+<script>
+    const filter = {
+        "searchQuery": "",
+        "currentPage": 1,
+        "pageSize": 5,
+        "sortColumn": "",
+        "sortDirection": ""
+    };
+
+
+    function RenderConcertFilter() {
+        $.ajax({
+            url: '/Concert/GetConcertFilterPartial',
+            type: 'GET',
+            data: filter,
+            success: function (response) {
+                $('#concertTableContainer').html(response);
+                $('#pageSize').val(filter.pageSize);
+                console.log("concert table view");
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading concerts: ' + error);
+            }
+        });
+    }
+
+
+
+    function DeleteConcert() {
+        $(document).on('click', '.btn-delete-concert', function () {
+            var concertId = $(this).data('concert-id');
+            $("#deleteConcertId").val(concertId);
+        });
+
+        $('#DeleteConcertForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+            var concertId = $("#deleteConcertId").val();
+            $.ajax({
+                type: 'POST',
+                url: '/Concert/Delete',
+                data: { id: concertId },
+                success: function (response) {
+                    if (!response.success) {
+                        // Handle specific error messages
+                        $('#DeleteConcertModal').modal('hide');
+                        console.log("here if delete")
+                        toastr.error( "Error");
+
+                    } else {
+                        // Handle success response
+                        $('#DeleteConcertModal').modal('hide');
+                        console.log("here else");
+                        toastr.success("Concert Deleted successfully!", "Success");
+                        @* $('.concertPartial').html(response); *@
+                            RenderConcert();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    toastr.error("Something went wrong!", "Error");
+                    toastr.error(error, "Error");
+                }
+            });
+        });
+    
+    }
+
+
+
+
+
+    function filterConcert() {
+        // Event handler for search input
+        $('#search').on('input', function () {
+            var searchQuery = $(this).val();
+            filter.searchQuery = searchQuery;
+            console.log(filter);
+            RenderConcertFilter(filter);
+        });
+    }
+
+
+    function pagination() {
+        // Use event delegation for dynamically loaded elements
+        $(document).on('click', '.prev-button', function () {
+            if (filter.currentPage > 1) {
+                filter.currentPage--;
+                console.log(filter);
+                RenderConcertFilter(filter);
+            }
+        });
+
+        $(document).on('click', '.next-button', function () {
+            if (filter.currentPage < 10) {
+                filter.currentPage++;
+                console.log(filter);
+                RenderConcertFilter(filter);
+            }
+        });
+
+        $(document).on('input', '#pageSize', function () {
+            var pageSize = $(this).val();
+
+            filter.pageSize = pageSize;
+            filter.currentPage = 1;
+            console.log(filter);
+            RenderConcertFilter(filter);
+        });
+
+        $(document).on('click', '.btn-concert-sort', function () {
+            var column = $(this).data("column-name");
+            var direction = $(this).data("direction");
+            filter.sortColumn = column;
+            filter.sortDirection = direction;
+            console.log(filter);
+            RenderConcertFilter(filter);
+        });
+    }
+
+
+    $(document).ready(function () {
+        RenderConcertFilter();
+        filterConcert();
+        pagination();
+        DeleteConcert();
+    });
+
+
+</script>

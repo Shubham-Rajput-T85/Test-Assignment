@@ -1,0 +1,164 @@
+
+@model Test.Entity.Models.ConcertPagination
+@{
+    @inject IUserRepository UserRepository;
+    @using Test.Entity.Data
+    @using Test.Repository.Interfaces
+    @using Test.Service.Interfaces
+    @using Test.Service.Utils
+    @using System.Security.Claims;
+
+      var name = User.FindFirst(ClaimTypes.Name)?.Value; 
+      var user = SessionUtils.GetUser(Context);
+      User curruser =  await UserRepository.GetUserByIdAsync(user.UserId);
+}
+
+
+<table class="table table-hover" id="userTable">
+    <thead>
+        <tr>
+            <th scope="col">Title 
+            </th>
+            <th scope="col">Artist
+                    <button class="btn-remove-none btn-concert-sort" data-column-name="artistname" data-direction="asc">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                    <button class="btn-remove-none btn-concert-sort" data-column-name="artistname" data-direction="desc">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+            </th>
+            <th scope="col">Venue
+                    <button class="btn-remove-none btn-concert-sort" data-column-name="venue" data-direction="asc">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                    <button class="btn-remove-none btn-concert-sort" data-column-name="venue" data-direction="desc">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </button> 
+            </th>
+            <th scope="col">Date
+                    <button class="btn-remove-none btn-concert-sort" data-column-name="concertdate" data-direction="asc">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                    <button class="btn-remove-none btn-concert-sort" data-column-name="concertdate" data-direction="desc">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+            </th>
+            <th scope="col">Price</th>
+            <th scope="col">Total Seat</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+<tbody>
+        @if(Model.Concerts == null){
+            <tr> <td colspan="7" class="text-center">-- No Data --</td>
+            </tr>
+        }
+        else{
+        @foreach (var concertData in Model.Concerts)
+        {
+             <tr>
+                <td scope="row">
+                  <div class="d-flex align-items-center">
+                    @concertData.Title
+                  </div>
+                </td>
+                <td> @concertData.ArtistName</td>
+                <td>@concertData.Venue</td>
+                <td>@concertData.ConcertDate.ToString("dd-MM-yyyy")
+                </td>
+                
+                <td>@concertData.Price</td>
+                <td>@concertData.TotalSeat</td>
+
+                <td>
+                  <a asp-controller="Concert" asp-action="Book" asp-route-id="@concertData.ConcertId" class="btn btn-success">Book Ticket</a> 
+                  @if(curruser.Role == "Admin"){
+                  <a asp-controller="Concert" asp-action="Edit" asp-route-id="@concertData.ConcertId" class="btn"><i class="fa-solid fa-pen"></i></a> 
+                  <button type="button" class="btn btn-delete-concert" data-bs-toggle="modal" data-concert-id="@concertData.ConcertId" data-bs-target="#DeleteConcertModal">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                  }
+                </td>
+              </tr>
+        }        
+        }
+       </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div aria-label="Page navigation example" class="d-flex justify-content-end ">
+    <ul class="pagination justify-content-end ">
+        <li class="page-item m-2">
+            <label>Show:</label>
+            <select id="pageSize">
+                <option>5</option>
+                <option>10</option>
+                <option>20</option>
+            </select>
+        </li>
+        <li class=" page-item m-2">
+            @if(Model.Pagination.TotalRecords == 0){
+                <p class="d-inline">Showing 0 - 0 of 0</p>
+            }
+            else{
+
+            <p class="d-inline">Showing @(((Model.Pagination.CurrentPage - 1) * Model.Pagination.PageSize) + 1) -
+                @((Model.Pagination.CurrentPage * Model.Pagination.PageSize > Model.Pagination.TotalRecords ?
+                                Model.Pagination.TotalRecords :
+                                Model.Pagination.CurrentPage * Model.Pagination.PageSize)) of @Model.Pagination.TotalRecords</p>
+            }
+        </li>
+        <!-- Previous Button -->
+        <li class="page-item m-1">
+            @if (Model.Pagination.CurrentPage > 1)
+            {
+                <a type="button" class="btn border-1 page-link prev-button" @* @ href="@Url.Action("Index", new { search = Model.Pagination.SearchTerm, page = Model.Pagination.CurrentPage - 1 })" @ *@
+                            ><span
+                        aria-hidden="true">&laquo;</span></a>
+            }
+        </li>
+        <li class="page-item m-1">
+            @if (Model.Pagination.CurrentPage < (int)Math.Ceiling((double)Model.Pagination.TotalRecords /
+                        Model.Pagination.PageSize))
+            {
+                <a type="button" class="btn border-1 page-link next-button" @* @ href="@Url.Action("Index", new { search = Model.Pagination.SearchTerm, page = Model.Pagination.CurrentPage + 1 })" @ *@
+                            ><span
+                        aria-hidden="true">&raquo;</span></a>
+            }
+        </li>
+    </ul>
+
+</div>
+
+
+
+
+
+<!-- Modal for delete confirmation -->
+<div class="modal fade" id="DeleteConcertModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="DeleteUserBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="DeleteUserBackdropLabel">Delete Confirmation</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div>Are you sure you want to delete the concert Event ?</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form id="DeleteConcertForm" method="post" asp-controller="Concert" asp-action="Delete">
+                    <input id="deleteConcertId" name="id" />
+                    <div class="d-flex justify-content-around">
+                        <button type="submit" class="btn btn-danger me-1">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

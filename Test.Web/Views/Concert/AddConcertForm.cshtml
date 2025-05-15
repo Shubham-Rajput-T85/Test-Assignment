@@ -1,0 +1,85 @@
+@{
+    ViewData["Title"] = "Add Concerts Page";
+}
+
+@model Test.Entity.Models.ConcertView;
+
+    <!-- main-body starts-->
+    <div class="col container-fluid main-body">
+      <div class="d-flex justify-content-between ps-3 pe-3">
+      <h2 class="page-heading">Add Concert</h2>
+      <a asp-controller="Concert" asp-action="Index"  type="button" class="btn btn-outline-primary align-self-center">&#60; back</a>
+      </div>  
+
+      <form asp-controller="Concert" asp-action="Add" id="adduserform" class="form-control form-style">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" asp-for="Title">
+              <label for="Title">Title</label>
+              <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control"   asp-for="ArtistName">
+              <label for="ArtistName">Artist Name</label>
+              <span asp-validation-for="ArtistName" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control"  asp-for="Venue">
+              <label for="Venue">Venue</label>
+              <span asp-validation-for="Venue" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-floating mb-3">
+              <input type="datetime" class="form-control" asp-for="ConcertDate">
+              <label for="ConcertDate">Date</label>
+              <span asp-validation-for="ConcertDate" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <input class="form-control"  asp-for="Price">
+              <label for="Price">Price</label>
+              <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input  class="form-control"  asp-for="TotalSeat">
+              <label for="TotalSeat">Total Seat</label>
+              <span asp-validation-for="TotalSeat" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+        
+
+        <div>
+          @* <a href="user.html" type="button" class="btn btn-primary text-white">Create User</a> *@
+          <button type="submit" class="btn btn-primary text-white btn-custom">Create Concert</button>
+          <button class="btn btn-outline-primary" asp-controller="User" asp-action="Index">cancel</button>
+        </div>
+
+        <div class="display_message text-danger"></div>
+      </form>
+      
+    </div>
+    <!-- main-body ends-->
+
+
+
+<partial name="_ValidationScriptsPartial">

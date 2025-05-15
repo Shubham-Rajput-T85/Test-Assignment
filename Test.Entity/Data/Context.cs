@@ -19,7 +19,11 @@ public class Context : DbContext
 
 
         //Adding Domain Classes as DbSet
-        public DbSet<User> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+
+        public virtual  DbSet<Concert> Concerts { get; set; }
+
+        public virtual DbSet<Ticket> Tickets { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
