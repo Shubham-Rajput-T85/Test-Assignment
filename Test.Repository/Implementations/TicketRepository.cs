@@ -40,9 +40,9 @@ public class TicketRepository : ITicketRepository
         await _context.SaveChangesAsync();
     }
 
-    public bool IsTicketExistAsync(int userid)
+    public bool IsTicketExistAsync(int userid , int concertid)
     {
-        return _context.Tickets.Any(c => c.UserId == userid);
+        return _context.Tickets.Any(c => c.UserId == userid && c.ConcertId == concertid);
     }
 
 

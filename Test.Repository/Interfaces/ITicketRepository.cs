@@ -13,5 +13,5 @@ public interface ITicketRepository
 
     Task UpdateAsync(Ticket Ticket);
 
-    bool IsTicketExistAsync(int userid);
+    bool IsTicketExistAsync(int userid , int concertid);
 }

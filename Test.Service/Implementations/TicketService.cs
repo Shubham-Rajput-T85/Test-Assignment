@@ -42,18 +42,20 @@ public class TicketService : ITicketService
     public async Task<int> AddTicketAsync(TicketView Ticket)
     {
         var ConcertModel = await _concertRepository.GetConcertByIdAsync(Ticket.ConcertId);
-        var existTicket = _ticketRepository.IsTicketExistAsync(Ticket.UserId);
+        // var existTicket = _ticketRepository.IsTicketExistAsync(Ticket.UserId);
 
-        if (existTicket == true)
-        {
-            throw new InvalidOperationException("A Ticket with this user already exists.");
-        }
+        // if (existTicket == true)
+        // {
+        //     throw new InvalidOperationException("A Ticket with this user already exists.");
+        // }
         try
         {
             if(Ticket.Seat >= 5){
                 Ticket.Discount = 20;
             }
-
+            if(Ticket.Seat + ConcertModel.OccupiedSeat > ConcertModel.TotalSeat){
+                return 0;
+            }
             Ticket.Amount =  (decimal)(Ticket.Seat *(ConcertModel.Price  *((100 - Ticket.Discount)/100))) ;
 
             var addTicket = new Ticket
@@ -66,6 +68,10 @@ public class TicketService : ITicketService
                 Amount = Ticket.Amount
             };
             int id = await _ticketRepository.AddAsync(addTicket);
+
+            ConcertModel.OccupiedSeat = ConcertModel.OccupiedSeat + Ticket.Seat;
+            await _concertRepository.UpdateAsync(ConcertModel);
+
             return id;
         }
         catch (System.Exception)

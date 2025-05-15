@@ -14,7 +14,7 @@ public class TicketView
     [Required]
     public DateTime BookTime { get; set; }
 
-    [Required] [Range(0 , 100 ,ErrorMessage = "seat can only be selected between 0 - 100." )]
+    [Required] [Range(1 , 100 ,ErrorMessage = "seat can only be selected between 1 - 100." )]
     public int Seat { get; set; }
 
     public int Discount { get; set; }
