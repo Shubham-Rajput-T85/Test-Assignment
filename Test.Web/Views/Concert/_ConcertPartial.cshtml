@@ -71,7 +71,7 @@
                 <td>@concertData.TotalSeat</td>
 
                 <td>
-                  <a asp-controller="Concert" asp-action="Book" asp-route-id="@concertData.ConcertId" class="btn btn-success">Book Ticket</a> 
+                  <a asp-controller="Concert" asp-action="BookTicket" asp-route-id="@concertData.ConcertId" class="btn btn-success">Book Ticket</a> 
                   @if(curruser.Role == "Admin"){
                   <a asp-controller="Concert" asp-action="Edit" asp-route-id="@concertData.ConcertId" class="btn"><i class="fa-solid fa-pen"></i></a> 
                   <button type="button" class="btn btn-delete-concert" data-bs-toggle="modal" data-concert-id="@concertData.ConcertId" data-bs-target="#DeleteConcertModal">
@@ -149,7 +149,7 @@
             </div>
             <div class="modal-footer">
                 <form id="DeleteConcertForm" method="post" asp-controller="Concert" asp-action="Delete">
-                    <input id="deleteConcertId" name="id" />
+                    <input type="hidden" id="deleteConcertId" name="id" />
                     <div class="d-flex justify-content-around">
                         <button type="submit" class="btn btn-danger me-1">Delete</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>

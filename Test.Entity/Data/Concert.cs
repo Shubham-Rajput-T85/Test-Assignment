@@ -27,6 +27,8 @@ public class Concert
     [Required]
     public int TotalSeat { get; set; }
 
+    public int OccupiedSeat { get; set; } = 0;
+
     [Required]
     public bool IsDeleted { get; set; } = false;
 

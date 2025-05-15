@@ -12,11 +12,14 @@ public class ConcertController : Controller
 
     private readonly IConcertService _concertService;
 
-    public ConcertController(IJwtService jwtService , IAuthService authService , IConcertService concertService)
+    private readonly ITicketService _ticketService;
+
+    public ConcertController(IJwtService jwtService , IAuthService authService , IConcertService concertService, ITicketService ticketService)
     {
         _jwtService = jwtService;
         _authService = authService;
         _concertService = concertService;
+        _ticketService = ticketService;
     }
 
 
@@ -75,7 +78,7 @@ public class ConcertController : Controller
                 await _concertService.AddConcertAsync(concert);
                 return RedirectToAction(nameof(Index));
             }
-            return View(concert);
+            return View("AddConcertForm");
         }
 
 
@@ -86,7 +89,7 @@ public class ConcertController : Controller
         {
             if (!ModelState.IsValid)
             {
-                return View("Index");
+                return View("ConcertForm");
             }
             var concert = await _concertService.GetConcertByIdAsync(id);
             if (concert == null)
@@ -99,7 +102,7 @@ public class ConcertController : Controller
 [CustomAuthorize("Admin")]
         
         [HttpPost]
-        public async Task<IActionResult> EditConcert(ConcertView concert, IFormFile? fileUpload)
+        public async Task<IActionResult> EditConcert(ConcertView concert)
         {
             try
             {
@@ -118,5 +121,41 @@ public class ConcertController : Controller
             }
         }
 
+
+
+[CustomAuthorize("User")]
+
+        [Route("Concert/BookTicket/{id}")]
+        public async Task<IActionResult> BookTicket(int id)
+        {
+            var model = new TicketView{
+                ConcertId = id
+            };
+            return View("ConcertBookingForm" , model);
+
+        }
+
+
+[CustomAuthorize("User")]
+        
+        [HttpPost]
+        public async Task<IActionResult> BookTicketSubmit(TicketView ticket)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("ConcertBookingForm", ticket);
+                }
+
+                await _ticketService.AddTicketAsync(ticket);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
 
 }

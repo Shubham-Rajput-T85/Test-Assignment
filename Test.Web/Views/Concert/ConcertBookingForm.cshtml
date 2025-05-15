@@ -1,0 +1,50 @@
+@model Test.Entity.Models.TicketView;
+@{
+    @inject IUserRepository UserRepository;
+    @using Test.Entity.Data
+    @using Test.Repository.Interfaces
+    @using Test.Service.Interfaces
+    @using Test.Service.Utils
+    @using System.Security.Claims;
+
+      var name = User.FindFirst(ClaimTypes.Name)?.Value; 
+      var user = SessionUtils.GetUser(Context);
+      User curruser =  await UserRepository.GetUserByIdAsync(user.UserId);
+}
+
+
+    <!-- main-body starts-->
+    <div class="col container-fluid main-body">
+      <div class="d-flex justify-content-between ps-3 pe-3">
+      <h2 class="page-heading">Book Ticket</h2>
+      <a asp-controller="Concert" asp-action="Index"  type="button" class="btn btn-outline-primary align-self-center">&#60; back</a>
+      </div>  
+
+      <form asp-controller="Concert" asp-action="BookTicketSubmit" method="post" id="bookform" class="form-control form-style">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-floating mb-3">
+              <input type="hidden" asp-for="ConcertId" value="@Model.ConcertId">
+                <input type="hidden" asp-for="UserId" value="@curruser.UserId">
+              <input type="number" class="form-control" asp-for="Seat">
+              <label for="Seat">No. of Seats</label>
+              <span asp-validation-for="Seat" class="text-danger"></span>
+            </div>
+          </div>
+        </div>
+
+
+        <div>
+          <button type="submit" class="btn btn-primary text-white btn-custom">Book Ticket</button>
+          <button class="btn btn-outline-primary" asp-controller="Concert" asp-action="Index">cancel</button>
+        </div>
+
+        <div class="display_message text-danger"></div>
+      </form>
+      
+    </div>
+    <!-- main-body ends-->
+
+
+
+<partial name="_ValidationScriptsPartial"> 
